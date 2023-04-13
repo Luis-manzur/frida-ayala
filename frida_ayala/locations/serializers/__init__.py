@@ -1,0 +1,1 @@
+from .venues import VenueModelSerializer
