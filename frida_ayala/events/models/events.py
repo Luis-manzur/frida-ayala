@@ -35,3 +35,6 @@ class Event(FAModel):
     def __str__(self):
         """Return event's str representation."""
         return str(self.name)
+
+    def __unicode__(self):
+        return self.name

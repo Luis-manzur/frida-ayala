@@ -19,3 +19,7 @@ class EventDay(FAModel):
 
     class Meta:
         ordering = ['-created']
+
+    def __str__(self):
+        """Return event's str representation."""
+        return f'{self.date}'

@@ -14,7 +14,7 @@ from frida_ayala.utils.admin import admin_site
 
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('pk', 'type', 'event', 'price')
-    list_filter = ('event',)
+    list_filter = ('event__name',)
     search_fields = ('type', 'price', 'event')
 
 

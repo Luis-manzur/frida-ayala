@@ -6,6 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 
 # Models
 from frida_ayala.users.models import User, Profile
+from frida_ayala.utils.admin import admin_site
 
 
 class ProfileInline(admin.TabularInline):
@@ -35,4 +36,4 @@ class CustomUserAdmin(UserAdmin):
         return fieldsets
 
 
-admin.site.register(User, CustomUserAdmin)
+admin_site.register(User, CustomUserAdmin)

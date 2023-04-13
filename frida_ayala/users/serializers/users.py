@@ -74,6 +74,7 @@ class UserSignUpSerializer(serializers.Serializer):
     birth_date = serializers.DateField(required=True, validators=[validate_birth_date])
     address = serializers.CharField(max_length=60, required=True)
     municipality = serializers.IntegerField(required=False)
+    state = serializers.IntegerField(required=False)
     gender = serializers.ChoiceField(choices=['F', 'M', 'O'])
 
     def validate(self, data):
@@ -86,6 +87,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
         if not data.get('municipality'):
             data['municipality'] = None
+            data['state'] = None
         return data
 
     def get_separated_data(self, data: dict):
