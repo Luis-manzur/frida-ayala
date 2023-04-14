@@ -15,12 +15,13 @@ def send_ticket_purchase_email(user_pk):
     tickets = order.tickets.all()
     total = 0
     for ticket in tickets: total += ticket.price
+
     user = order.user
     subject = f'Entradas {order.event.name}'
     from_email = settings.DEFAULT_FROM_EMAIL
     content = render_to_string(
         'emails/tickets/qr.html',
-        {'tickets': ticket_orders, 'user': user, 'event': order.event, 'order': order, 'total': total},
+        {'tickets': tickets, 'user': user, 'ticket_orders': ticket_orders, 'order': order, 'total': total},
     )
     msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
     msg.attach_alternative(content, 'text/html')

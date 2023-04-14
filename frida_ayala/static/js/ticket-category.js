@@ -29,7 +29,6 @@ $(document).ready(function () {
         if (value) {
             let url = '/tickets/?event=' + value // Your API URL
 
-
             $.ajax({
                 url: url,
                 success: function (data) {

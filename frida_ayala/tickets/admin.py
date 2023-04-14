@@ -24,7 +24,6 @@ class EventInline(admin.TabularInline):
 
 class OrderTicketInline(admin.TabularInline):
     model = OrderTicket
-    inlines = [EventInline]
     fk = 'order'
 
 

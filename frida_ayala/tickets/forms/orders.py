@@ -14,18 +14,6 @@ from frida_ayala.tickets.tasks import send_ticket_purchase_email
 
 
 class OrderTicketForm(forms.ModelForm):
-    # ticket = ChainedModelChoiceField(
-    #     queryset=Ticket.objects.all(),
-    #     chained_field='event',
-    #     chained_model_field='order',
-    #     show_all=True,
-    #     auto_choose=True,
-    #     to_app_name='tickets',
-    #     to_model_name='OrderTicket',
-    #     foreign_key_app_name='tickets',
-    #     foreign_key_model_name='Order',
-    #     foreign_key_field_name='event'
-    # )
 
     class Meta:
         model = OrderTicket
@@ -33,7 +21,6 @@ class OrderTicketForm(forms.ModelForm):
 
 
 class TicketOrderForm(forms.ModelForm):
-    ticket = OrderTicketForm()
 
     class Meta:
         model = Order
