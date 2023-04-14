@@ -1,5 +1,6 @@
 """Celery tasks."""
 
+import qrcode
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -14,7 +15,15 @@ def send_ticket_purchase_email(user_pk):
     ticket_orders = OrderTicket.objects.filter(order=order)
     tickets = order.tickets.all()
     total = 0
-    for ticket in tickets: total += ticket.price
+    for ticket in ticket_orders:
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+        data = ticket.code
+        qr.add_data(data)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        file = 'frida_ayala/static/images/qr/' + str(ticket.code) + '.png'
+        img.save(file)
+        total += ticket.ticket.price
 
     user = order.user
     subject = f'Entradas {order.event.name}'
@@ -23,6 +32,7 @@ def send_ticket_purchase_email(user_pk):
         'emails/tickets/qr.html',
         {'tickets': tickets, 'user': user, 'ticket_orders': ticket_orders, 'order': order, 'total': total},
     )
+
     msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
     msg.attach_alternative(content, 'text/html')
     msg.send()

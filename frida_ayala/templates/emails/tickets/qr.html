@@ -32,9 +32,10 @@
     </tr>
     <tr>
         <td>
-            <h1 style="width:90%; margin: 0 auto">Gracias por la
+            <h1 style="width:50%; margin: 0 auto; text-align: center;">Gracias por la
                 compra, {{ user.first_name }} {{ user.last_name }}!</h1>
-            <p style="width:90%; margin: 0 auto">Has comprado exitosamente {{ tickets.count }} entradas
+            <p style="width:50%; margin: 0 auto; text-align: center;">Has comprado exitosamente {{ tickets.count }}
+                entradas
                 para {{ order.event }}.</p>
             <h4 align="center" style="margin-top: 80px">Order #{{ order.code }}</h4>
             <table align="center" style="width: 50%;border-collapse: collapse; margin-bottom: 40px; margin-top: 40px"
@@ -73,10 +74,11 @@
                     <h4 align="center" style="padding: 10px"> Ticket #{{ ticket.code }}</h4>
                     <div class="card-content">
                         <div class="QR">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Commons_QR_code.png"
-                                 alt="QR">
+                            <img src="http://0.0.0.0:8000/static/images/qr/{{ ticket.code }}.png"
+                                 alt="QR" style="height: 200px;">
                         </div>
                         <div class="ticket-description">
+                            <p>Usuario: {{ ticket.first_name }} {{ ticket.last_name }}</p>
                             <p>Fecha: {{ order.event_day.date }}</p>
                             <p>Hora: {{ order.event_day.start_time }}</p>
                             <p>Tipo: {{ ticket.ticket.type }}</p>
@@ -162,7 +164,6 @@
     .ticket-description {
         width: 40%;
         text-align: justify;
-        margin: auto 0;
     }
 
     .download-btn {
