@@ -22,4 +22,4 @@ class EventDayViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins
     ordering = ('-created',)
 
     def get_queryset(self):
-        return EventDay.objects.filter(event.slug_name == self.kwargs['event_slug_name'])
+        return EventDay.objects.filter(event__slug_name=self.kwargs['event_slug_name'])
