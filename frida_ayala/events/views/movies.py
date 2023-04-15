@@ -11,7 +11,7 @@ from frida_ayala.events.models.movies import Movie
 from frida_ayala.events.serializers import MovieModelSerializer
 
 
-class MovieViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.ListModelMixin):
+class MovieViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     """Movie view set.
         Handle Movies list and retrieve.
         """

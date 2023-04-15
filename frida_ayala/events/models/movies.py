@@ -14,9 +14,8 @@ class Movie(FAModel):
     name = models.CharField('Movie name', max_length=120)
     slug_name = models.SlugField(unique=True, max_length=40)
     banner = models.ImageField(upload_to='movies/banners', unique=True)
-    duration = models.DurationField()
     about = models.CharField('Movie description', max_length=255)
-    show = models.ForeignKey(EventDay, related_name='movie', null=True, on_delete=models.SET_NULL)
+    show = models.ForeignKey(EventDay, related_name='movies', null=True, on_delete=models.SET_NULL)
     trailer_url = models.URLField(max_length=200)
 
     class Meta:

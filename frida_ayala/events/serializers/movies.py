@@ -12,4 +12,4 @@ class MovieModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        exclude = ['created', 'modified']
+        exclude = ['created', 'modified', 'show']

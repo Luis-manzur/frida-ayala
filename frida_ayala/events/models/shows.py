@@ -22,4 +22,4 @@ class EventDay(FAModel):
 
     def __str__(self):
         """Return event's str representation."""
-        return f'{self.date}'
+        return f'{self.event} ({self.date})'

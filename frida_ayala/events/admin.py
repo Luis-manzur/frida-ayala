@@ -34,8 +34,9 @@ class EventDayAdmin(admin.ModelAdmin):
 
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'duration')
+    list_display = ('pk', 'name', 'show')
     search_fields = ('name',)
+    list_filter = ('show__event__name', 'show__date')
 
 
 admin_site.register(Movie, MovieAdmin)
