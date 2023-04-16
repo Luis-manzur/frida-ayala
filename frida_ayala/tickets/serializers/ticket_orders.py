@@ -9,6 +9,14 @@ from frida_ayala.tickets.models.orders_tickets import OrderTicket
 from frida_ayala.tickets.serializers.tickets import TicketSerializer
 
 
+class TicketOrderCreateModelSerializer(serializers.ModelSerializer):
+    """Ticket Order Model Serializer"""
+
+    class Meta:
+        model = OrderTicket
+        exclude = ['created', 'modified', 'order', 'active']
+
+
 class TicketOrderModelSerializer(serializers.ModelSerializer):
     """Ticket Order Model Serializer"""
     ticket = TicketSerializer(read_only=True)
