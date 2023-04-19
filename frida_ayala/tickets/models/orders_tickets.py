@@ -20,3 +20,8 @@ class OrderTicket(FAModel):
     first_name = models.CharField(max_length=16)
     last_name = models.CharField(max_length=16)
     code = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    entries = models.IntegerField(default=1)
+
+    def save(self, *args, **kwargs):
+        self.entries = self.ticket.entries
+        super().save(*args, **kwargs)

@@ -5,10 +5,12 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 # simple-jwt
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
+from frida_ayala.tickets.views.orders import QReadeTemplateView
 from frida_ayala.utils.admin import admin_site
 
 urlpatterns = [
                   path('admin/', admin_site.urls),
+                  path('qr-reader/', QReadeTemplateView.as_view(), name='qr-reader'),
                   re_path(r'^chaining/', include('smart_selects.urls')),
                   # path('camera_admin/', camera_admin_site.urls),
                   path("schema/", SpectacularAPIView.as_view(), name="api-schema"),

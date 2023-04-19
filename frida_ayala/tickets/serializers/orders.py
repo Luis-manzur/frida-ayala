@@ -1,4 +1,5 @@
 """Ticket orders"""
+import logging
 
 # Django REST Framework
 from rest_framework import serializers
@@ -12,6 +13,8 @@ from frida_ayala.tickets.models.orders_tickets import OrderTicket
 from frida_ayala.tickets.serializers.ticket_orders import TicketOrderModelSerializer, TicketOrderCreateModelSerializer
 # Tasks
 from frida_ayala.tickets.tasks import send_ticket_purchase_email
+
+logger = logging.getLogger('console')
 
 
 class OrderCreateSerializer(serializers.Serializer):
@@ -41,3 +44,33 @@ class OrderModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         exclude = ['created', 'modified']
+
+
+class VerifyTicketSerializer(serializers.Serializer):
+    token = serializers.UUIDField()
+
+    def validate_token(self, data):
+        error = None
+        try:
+            order_ticket: OrderTicket = OrderTicket.objects.get(code=data)
+            if not order_ticket.active:
+                error = 'Este ticket ya fue utilizado.'
+                raise Exception('Ticket already used')
+            self.context['order_ticket'] = order_ticket
+        except Exception as e:
+            if not error:
+                error = 'Ticket no encontrado'
+            logger.info(f'error validating in VerifyTicketSerializer: {e}')
+            raise serializers.ValidationError(error)
+
+        return data
+
+    def create(self, data):
+        try:
+            order_ticket: OrderTicket = self.context['order_ticket']
+            order_ticket.active = False
+            order_ticket.save()
+            return order_ticket
+        except Exception as e:
+            logger.info(f'error saving in VerifyTicketSerializer: {e}')
+            raise serializers.ValidationError('Error desconocido intente de nuevo')

@@ -26,22 +26,36 @@ $(document).ready(function () {
 
 // Select Change Function On Add Page
     function change(value) {
+        let error = false
         if (value) {
             let url = '/tickets/?event=' + value // Your API URL
-
-            $.ajax({
-                url: url,
-                success: function (data) {
-                    let html = $.map(data, function (data) {
-                        return '<option value="' + data.id + '">' + data.type + '</option>'
-                    }).join('');
-                    html = '<option value selected>---------</option>' + html
-                    for (let i = 0; i < table[0].rows.length - 3; i++) {
-                        let elementId = "id_orderticket_set-" + i + "-ticket"
-                        document.getElementById(elementId).innerHTML = html // this will change the ticket options
-                    }
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+            }).then(async response => {
+                if (!response.ok) {
+                    error = true
                 }
-            });
+                return response.json();
+            })
+                .then(data => {
+                        if (!error) {
+                            let html = $.map(data, function (data) {
+                                return '<option value="' + data.id + '">' + data.type + '</option>'
+                            }).join('');
+                            html = '<option value selected>---------</option>' + html
+                            for (let i = 0; i < table[0].rows.length - 3; i++) {
+                                let elementId = "id_orderticket_set-" + i + "-ticket"
+                                document.getElementById(elementId).innerHTML = html // this will change the ticket options
+                            }
+                        } else {
+                            clean()
+                        }
+                    }
+                )
         } else {
             clean()
         }

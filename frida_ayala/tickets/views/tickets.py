@@ -18,4 +18,4 @@ class TicketsViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.
     serializer_class = TicketSerializer
 
     def get_queryset(self):
-        return Ticket.objects.filter(event__slug_name=self.kwargs['event_slug_name'])
+        return Ticket.objects.all()

@@ -25,14 +25,44 @@ class EventInline(admin.TabularInline):
 class OrderTicketInline(admin.TabularInline):
     model = OrderTicket
     fk = 'order'
+    exclude = ['entries']
+
+    def get_can_delete(self, request, obj=None):
+        if obj:
+            return False
+        else:
+            return True
+
+    def get_extra(self, request, obj=None):
+        if obj:
+            return 0
+        else:
+            return 3
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ('ticket', 'first_name', 'last_name')
+        else:
+            return ()
 
 
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderTicketInline]
-    form = TicketOrderForm
     list_display = ('code', 'user', 'created')
     list_filter = ('created',)
     search_fields = ('code', 'user')
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ('event', 'event_day', 'user', 'code')
+        else:
+            return ()
+
+    def get_form(self, request, obj=None, **kwargs):
+        if not obj:
+            return TicketOrderForm
+        else:
+            return super().get_form(request, obj, **kwargs)
 
     class Media:
         js = (

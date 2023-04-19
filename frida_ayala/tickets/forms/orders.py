@@ -22,7 +22,7 @@ class OrderTicketForm(forms.ModelForm):
 class TicketOrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = ['code']
+        exclude = ['code', 'tickets']
 
     def save(self, commit=True):
         order = super(TicketOrderForm, self).save(commit)

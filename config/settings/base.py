@@ -1,8 +1,8 @@
 """
 Base settings to build other settings files upon.
 """
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
 import environ
 
@@ -83,12 +83,13 @@ LOCAL_APPS = [
     'frida_ayala.users',
     'frida_ayala.locations',
     'frida_ayala.events',
-    'frida_ayala.tickets'
+    'frida_ayala.tickets',
+    'frida_ayala.companies',
+    'frida_ayala.products',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -229,7 +230,7 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s '
-            '%(process)d %(thread)d %(message)s'
+                      '%(process)d %(thread)d %(message)s'
         }
     },
     'handlers': {
@@ -300,6 +301,7 @@ SOCIALACCOUNT_FORMS = {'signup': 'frida_ayala.users.forms.UserSocialSignupForm'}
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
@@ -379,10 +381,20 @@ JAZZMIN_SETTINGS = {
         'locations.Venue': 'fas fa-map-marker',
         'tickets.Ticket': 'fas fa-ticket-alt',
         'tickets.Order': 'fas fa-shopping-cart',
+        'companies.Companies': 'fas fa-building',
+        'products.Product': 'fas fa-shopping-bag',
+        'products.ProductOrder': 'fas fa-shopping-cart'
     },
     'site_logo': 'images/favicons/FA.png',
     'login_logo': 'images/favicons/FA.png',
     'template_name': 'jazzmin/rebase.html',
+    'custom_links': {
+        'tickets': [{
+            'name': 'Scan tickets',
+            'url': 'qr-reader',
+            'icon': 'fas fa-qrcode',
+        }]
+    }
 }
 
 # USE_DJANGO_JQUERY = True

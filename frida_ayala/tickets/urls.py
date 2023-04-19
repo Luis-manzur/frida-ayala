@@ -6,9 +6,11 @@ from rest_framework.routers import DefaultRouter
 
 # Views
 from frida_ayala.tickets.views.orders import OrderViewSet
+from frida_ayala.tickets.views.tickets import TicketsViewSet
 
 router = DefaultRouter()
-router.register(r'tickets-orders', OrderViewSet, basename='tickets')
+router.register(r'tickets-orders', OrderViewSet, basename='tickets-orders')
+router.register(r'tickets', TicketsViewSet, basename='tickets')
 urlpatterns = [
     path('', include(router.urls))
 ]

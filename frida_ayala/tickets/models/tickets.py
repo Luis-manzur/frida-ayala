@@ -1,5 +1,6 @@
 """Tickets models"""
 
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Django
 from django.db import models
 
@@ -15,7 +16,14 @@ class Ticket(FAModel):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[validate_price_amount])
+    entries = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     stock = models.IntegerField(validators=[validate_ticket_stock])
+
+    class Meta:
+        unique_together = ('type', 'event')
+
+    def __str__(self):
+        return self.type
 
 
 class TicketEventDay(FAModel):

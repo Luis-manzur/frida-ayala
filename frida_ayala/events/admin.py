@@ -6,6 +6,7 @@ from django.contrib import admin
 from frida_ayala.events.models import Event
 from frida_ayala.events.models.movies import Movie
 from frida_ayala.events.models.shows import EventDay
+from frida_ayala.events.models.sponsors import Sponsors
 from frida_ayala.utils.admin import admin_site
 
 
@@ -19,8 +20,13 @@ class MovieInline(admin.TabularInline):
     fk = 'show'
 
 
+class SponsorsInline(admin.TabularInline):
+    model = Sponsors
+    fk = 'event'
+
+
 class EventAdmin(admin.ModelAdmin):
-    inlines = [EventDayInline]
+    inlines = [EventDayInline, SponsorsInline]
     list_display = ('pk', 'name', 'slug_name')
     list_filter = ('start_date', 'end_date')
     search_fields = ('name', 'start_date', 'end_date', 'venue')
