@@ -23,5 +23,6 @@ class OrderTicket(FAModel):
     entries = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
-        self.entries = self.ticket.entries
+        if not self.pk:
+            self.entries = self.ticket.entries
         super().save(*args, **kwargs)
