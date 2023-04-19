@@ -53,7 +53,7 @@ class VerifyTicketSerializer(serializers.Serializer):
         error = None
         try:
             order_ticket: OrderTicket = OrderTicket.objects.get(code=data)
-            if not order_ticket.active:
+            if not order_ticket.active or order_ticket.entries == 0:
                 error = 'Este ticket ya fue utilizado.'
                 raise Exception('Ticket already used')
             self.context['order_ticket'] = order_ticket
@@ -68,7 +68,9 @@ class VerifyTicketSerializer(serializers.Serializer):
     def create(self, data):
         try:
             order_ticket: OrderTicket = self.context['order_ticket']
-            order_ticket.active = False
+            order_ticket.entries -= 1
+            if order_ticket.entries == 0:
+                order_ticket.active = False
             order_ticket.save()
             return order_ticket
         except Exception as e:
