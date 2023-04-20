@@ -21,3 +21,8 @@ def validate_price_amount(value):
 def validate_ticket_stock(value):
     if value < 0:
         raise ValidationError(f'The stock must be greater than 0')
+
+
+def validate_one_field_only(value1, value2):
+    if bool(value1) == bool(value2):
+        raise ValidationError('Only one of the two fields can be filled.')

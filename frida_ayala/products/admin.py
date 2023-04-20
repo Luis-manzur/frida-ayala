@@ -4,7 +4,7 @@
 from django.contrib import admin
 
 # Forms
-from frida_ayala.products.forms import OrderItemInlineForm
+from frida_ayala.products.forms import OrderItemInlineForm, OrderForm
 # models
 from frida_ayala.products.models import Product, OrderItem, ProductOrder
 # Utils
@@ -35,7 +35,7 @@ class ProductOrderInline(admin.TabularInline):
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ('product', 'quantity')
+            return ('quantity',)
         else:
             return ()
 
@@ -50,7 +50,13 @@ class OrderAdmin(admin.ModelAdmin):
         if obj:
             return ('user', 'code')
         else:
-            return ()
+            return ('status',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        if not obj:
+            return OrderForm
+        else:
+            return super().get_form(request, obj, **kwargs)
 
 
 admin_site.register(ProductOrder, OrderAdmin)
