@@ -1,17 +1,19 @@
 """Celery tasks."""
-
+# utils
 import qrcode
+# Celery
 from celery import shared_task
+# Django
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-from frida_ayala.tickets.models import Order, OrderTicket
+# Models
+from frida_ayala.tickets.models import OrderTicket, Order
+from frida_ayala.users.models import Customer
 
 
-@shared_task()
-def send_ticket_purchase_email(user_pk):
-    order = Order.objects.filter(user=user_pk).first()
+def common_email_settings(order, user):
     ticket_orders = OrderTicket.objects.filter(order=order)
     tickets = order.tickets.all()
     total = 0
@@ -24,8 +26,6 @@ def send_ticket_purchase_email(user_pk):
         file = 'frida_ayala/static/images/qr/' + str(ticket.code) + '.png'
         img.save(file)
         total += ticket.ticket.price
-
-    user = order.user
     subject = f'Entradas {order.event.name}'
     from_email = settings.DEFAULT_FROM_EMAIL
     content = render_to_string(
@@ -36,3 +36,17 @@ def send_ticket_purchase_email(user_pk):
     msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
     msg.attach_alternative(content, 'text/html')
     msg.send()
+
+
+@shared_task()
+def send_ticket_purchase_email_customer(customer_pk):
+    customer = Customer.objects.get(pk=customer_pk)
+    order = customer.order
+    common_email_settings(order, customer)
+
+
+@shared_task()
+def send_ticket_purchase_email_user(order_pk):
+    order = Order.objects.get(pk=order_pk)
+    user = order.user
+    common_email_settings(order, user)

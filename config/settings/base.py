@@ -394,7 +394,8 @@ JAZZMIN_SETTINGS = {
             'url': 'qr-reader',
             'icon': 'fas fa-qrcode',
         }]
-    }
+    },
+    'changeform_format': "collapsible"
 }
 
 # USE_DJANGO_JQUERY = True

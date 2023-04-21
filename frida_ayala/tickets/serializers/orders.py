@@ -12,7 +12,7 @@ from frida_ayala.tickets.models.orders_tickets import OrderTicket
 # Serializers
 from frida_ayala.tickets.serializers.ticket_orders import TicketOrderModelSerializer, TicketOrderCreateModelSerializer
 # Tasks
-from frida_ayala.tickets.tasks import send_ticket_purchase_email
+from frida_ayala.tickets.tasks import send_ticket_purchase_email_user
 
 logger = logging.getLogger('console')
 
@@ -33,7 +33,7 @@ class OrderCreateSerializer(serializers.Serializer):
             ticket = OrderTicket.objects.create(**ticket_data)
             ticket.save()
 
-        send_ticket_purchase_email.delay(data['user'].pk)
+        send_ticket_purchase_email_user.delay(data['user'].pk)
         return order
 
 
