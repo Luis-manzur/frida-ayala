@@ -46,7 +46,8 @@ def send_ticket_purchase_email_customer(customer_pk):
 
 
 @shared_task()
-def send_ticket_purchase_email_user(order_pk):
-    order = Order.objects.get(pk=order_pk)
+def send_ticket_purchase_email_user(order_code):
+    order = Order.objects.get(code=order_code)
+    print(order)
     user = order.user
     common_email_settings(order, user)

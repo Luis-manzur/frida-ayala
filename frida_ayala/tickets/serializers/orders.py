@@ -7,6 +7,7 @@ from rest_framework import serializers
 # Models
 from frida_ayala.events.models.events import Event
 from frida_ayala.events.models.shows import EventDay
+from frida_ayala.payments.serializers import PaymentCreateSerializer
 from frida_ayala.tickets.models.orders import Order
 from frida_ayala.tickets.models.orders_tickets import OrderTicket
 # Serializers
@@ -22,10 +23,11 @@ class OrderCreateSerializer(serializers.Serializer):
     tickets = serializers.ListField(child=TicketOrderCreateModelSerializer())
     event = serializers.SlugRelatedField(slug_field='slug_name', queryset=Event.objects.all())
     event_day = serializers.PrimaryKeyRelatedField(queryset=EventDay.objects.all())
+    payment = PaymentCreateSerializer()
 
     def create(self, data):
         tickets_data = data.pop('tickets')
-
+        payment = data.pop('payment')
         order = Order(**data)
         order.save()
         for ticket_data in tickets_data:
@@ -33,7 +35,7 @@ class OrderCreateSerializer(serializers.Serializer):
             ticket = OrderTicket.objects.create(**ticket_data)
             ticket.save()
 
-        send_ticket_purchase_email_user.delay(data['user'].pk)
+        send_ticket_purchase_email_user.delay(order.code)
         return order
 
 

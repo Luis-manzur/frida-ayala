@@ -86,6 +86,7 @@ LOCAL_APPS = [
     'frida_ayala.tickets',
     'frida_ayala.companies',
     'frida_ayala.products',
+    'frida_ayala.payments',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -400,3 +401,7 @@ JAZZMIN_SETTINGS = {
 
 # USE_DJANGO_JQUERY = True
 DATE_INPUT_FORMATS = '%d %b %Y'
+
+# PAYMENTS
+INTERNATIONAL_CARDS_URL = env('INTERNATIONAL_CARDS_URL')
+INTERNATIONAL_API_KEY = env('INTERNATIONAL_API_KEY')
