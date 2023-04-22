@@ -74,7 +74,7 @@
                     <h4 align="center" style="padding: 10px"> Ticket #{{ ticket.code }}</h4>
                     <div class="card-content">
                         <div class="QR">
-                            <img src="http://0.0.0.0:8000/static/images/qr/{{ ticket.code }}.png"
+                            <img src="{{ ticket.qr.url }}"
                                  alt="QR" style="height: 200px;">
                         </div>
                         <div class="ticket-description">

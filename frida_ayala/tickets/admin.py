@@ -27,7 +27,7 @@ class EventInline(admin.TabularInline):
 class OrderTicketInline(admin.TabularInline):
     model = OrderTicket
     fk = 'order'
-    exclude = ['entries']
+    exclude = ['entries', 'qr']
 
     def get_can_delete(self, request, obj=None):
         if obj:
