@@ -31,10 +31,10 @@ def send_confirmation_email(user_pk):
     """Send account verification link to given user."""
     user = User.objects.get(pk=user_pk)
     verification_token = gen_verification_token(user)
-    subject = "Bienvenido @{}! Verifica tu cuenta antes de empezar a utilizar fridayala.com.".format(
+    subject = "Bienvenido @{}! Verifica tu cuenta antes de empezar a utilizar fridaayala.com.".format(
         user.username
     )
-    from_email = 'Dont Reply <do_not_reply@fridayala.com>'
+    from_email = 'Dont Reply <do_not_reply@fridaayala.com>'
     content = render_to_string(
         "emails/users/account_verification.html",
         {"token": verification_token, "user": user},
