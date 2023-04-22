@@ -168,7 +168,6 @@ SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa F405
 ]
 # Your stuff...
 # ------------------------------------------------------------------------------
-STATIC_ROOT = BASE_DIR / "staticfiles-cdn"  # dev example
 
 AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY')
