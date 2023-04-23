@@ -23,4 +23,4 @@ class TicketOrderModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderTicket
-        exclude = ['created', 'modified', 'order', 'active']
+        exclude = ['created', 'modified', 'order', 'active', 'qr']
