@@ -75,7 +75,7 @@ class PaymentCreateSerializer(serializers.Serializer):
     reference = serializers.IntegerField()
 
     def validate(self, obj):
-        if settings.DEBUG:
+        if not settings.DEBUG:
             transaction_response = make_payment(obj)
             if not transaction_response:
                 raise serializers.ValidationError("Transaction error, try again later.")
