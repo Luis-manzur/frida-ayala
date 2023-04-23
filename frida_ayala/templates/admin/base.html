@@ -269,6 +269,7 @@
                                                     <li class="nav-item">
                                                         <a href="
 
+
                                                             {% if model.url %}{{ model.url }}{% else %}javascript:void(0){% endif %}"
                                                            class="nav-link">
                                                             <i class="nav-icon {{ model.icon }}"></i>
@@ -399,8 +400,8 @@
 <script src="{% static "vendor/adminlte/js/adminlte.min.js" %}"></script>
 <!-- Django customisations -->
 <script src="{% static "jazzmin/js/main.js" %}"></script>
-<script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-<script src="/static/smart-selects/admin/js/bindfields.js"></script>
+<script src="{% static "smart-selects/admin/js/bindfields.js" %}"></script>
+<script src="{% static "smart-selects/admin/js/chainedfk.js" %}"></script>
 {% if jazzmin_settings.custom_js %}
     <script src="{% static jazzmin_settings.custom_js %}"></script>
 {% endif %}
