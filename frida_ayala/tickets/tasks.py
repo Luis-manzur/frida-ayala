@@ -1,6 +1,7 @@
 """Celery tasks."""
 # utils
 from io import BytesIO
+from time import sleep
 
 import qrcode
 # Celery
@@ -50,13 +51,15 @@ def common_email_settings(order, user):
 
 @shared_task()
 def send_ticket_purchase_email_customer(customer_pk):
+    sleep(2)
     customer = Customer.objects.get(pk=customer_pk)
     order = customer.order
     common_email_settings(order, customer)
 
 
 @shared_task()
-def send_ticket_purchase_email_user(order_code):
-    order = Order.objects.get(code=order_code)
+def send_ticket_purchase_email_user(order_pk):
+    sleep(2)
+    order = Order.objects.get(pk=order_pk)
     user = order.user
     common_email_settings(order, user)
