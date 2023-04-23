@@ -1,69 +1,70 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" xmlns="https://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="en" xmlns="https://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="x-apple-disable-message-reformatting">
     <title></title>
     <!--[if mso]>
-<noscript>
-<xml>
-<o:OfficeDocumentSettings>
-<o:PixelsPerInch>96</o:PixelsPerInch>
-</o:OfficeDocumentSettings>
-</xml>
-</noscript>
-<![endif]-->
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
     <style>
-        table, td, div, h1, p {font-family: Arial, sans-serif;}
+        table, td, div, h1, p {
+            font-family: Arial, sans-serif;
+        }
     </style>
 </head>
 </html>
 <body style="margin:0;padding:0;">
-    <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
-        <tr>
-            <td align="center" style="padding:40px 0 30px 0;background:#70bbd9;">
-                <img src="https://res.cloudinary.com/delb58t1u/image/upload/v1681353155/FA_vsubee.png" alt="Frida Ayala Logo">
-                <h1 style="color: white; font-size: xxx-large">{{ user.username }}!</h1>
-            </td>
-        </tr>
-        <tr>
-            <td style="padding:36px 30px 42px 30px;">
-                <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Gracias por comprar tu entrada para {{ event.name }}!</h1>
-                <p>Fecha: {{ event_day.date }}</p>
-                <p>Hora: {{ event_day.start_time }}</p>
-                p
-                <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Se anexaron las entradas al correo electrónico, y los detalles de la venta.</p>
-                <br>
-            </td>
-        </tr>
-        <tr>
-            <td  align="center"style="padding:36px 30px 42px 30px;background:#ee4c50;">
-                <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
+<table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
+    <tr>
+        <td align="center" style="padding:40px 0 30px 0;">
+            <img src="https://res.cloudinary.com/delb58t1u/image/upload/v1681353155/FA_vsubee.png"
+                 alt="Frida Ayala Logo">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h4 align="center" style="padding: 10px"> Ticket #{{ ticket.code }}</h4>
+            <div align="center">
+                <table>
                     <tr>
-                        <td style="padding:0;width:45%;" align="left">
-                            <p style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">&reg; Frida Ayala, 2023</p>
+                        <td>
+                            <div class="QR"
+                                 style="padding: 0 20px 10px 20px; margin: 0 auto;">
+                                <img
+                                    src="{{ ticket.qr.url }}"
+                                    alt="QR" style="height: 200px; width: 200px">
+                            </div>
                         </td>
-                        <td style="padding:0;width:45%;" align="right">
-                            <table role="presentation" style="border-collapse:collapse;border:0;border-spacing:0;">
-                                <tr>
-                                    <td style="padding:0 0 0 10px;width:38px;">
-                                        <a href="http://www.twitter.com/">
-                                          <img src="https://static.vecteezy.com/system/resources/previews/018/930/745/original/twitter-logo-twitter-icon-transparent-free-free-png.png" alt="Twitter" width="38" style="height:auto;display:block;border:0;" />
-                                        </a>
-                                    </td>
-                                    <td style="padding:0 0 0 10px;width:38px;">
-                                        <a href="http://www.instagram.com/">
-                                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png" alt="Instagram" width="38" style="height:auto;display:block;border:0;" />
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td>
+                            <div class="ticket-description" style="text-align: justify;">
+                                <p>Usuario: {{ ticket.first_name }} {{ ticket.last_name }}</p>
+                                <p>Fecha: {{ order.event_day.date }}</p>
+                                <p>Hora: {{ order.event_day.start_time }}</p>
+                                <p>Tipo: {{ ticket.ticket.type }}</p>
+
+                            </div>
+
                         </td>
                     </tr>
+
                 </table>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+
 </body>
+<style>
+
+</style>

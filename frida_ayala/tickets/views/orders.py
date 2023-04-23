@@ -1,15 +1,22 @@
 """Orders Views"""
+# Utils
+from io import BytesIO
 
 # Django
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
 from django.views.generic import TemplateView
 # Django REST Framework
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+# xhtml2pdf
+from xhtml2pdf import pisa
 
 # Models
-from frida_ayala.tickets.models.orders import Order
+from frida_ayala.tickets.models import Order, OrderTicket
 # Serializers
 from frida_ayala.tickets.serializers.orders import OrderCreateSerializer, OrderModelSerializer, VerifyTicketSerializer
 from frida_ayala.tickets.serializers.ticket_orders import TicketOrderModelSerializer
@@ -28,6 +35,8 @@ class OrderViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.List
             return OrderCreateSerializer
         elif self.action in ['verify_ticket']:
             return VerifyTicketSerializer
+        elif self.action in ['download_pdf']:
+            return None
         else:
             return OrderModelSerializer
 
@@ -38,6 +47,9 @@ class OrderViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.List
         """Assign permissions based on action."""
         if self.action in ['create']:
             permissions = [IsAuthenticated]
+
+        elif self.action in ['download_pdf']:
+            permissions = [AllowAny]
 
         elif self.action in ['verify_ticket']:
             permissions = [IsAuthenticated, IsStaff]
@@ -60,6 +72,17 @@ class OrderViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.List
         ticket = serializer.save()
         data = TicketOrderModelSerializer(ticket).data
         return Response(data)
+
+    @action(detail=False, methods=['get'], url_path='download-ticket/(?P<code>[^/.]+)')
+    def download_pdf(self, request, *args, **kwargs):
+        ticket = get_object_or_404(OrderTicket, code=self.kwargs['code'])
+        template = get_template('pdfs/qr.html')
+        html = template.render({'ticket': ticket})
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+        if not pdf.err:
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        return None
 
 
 class QReadeTemplateView(TemplateView):

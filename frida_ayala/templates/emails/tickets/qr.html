@@ -23,6 +23,53 @@
         th {
             background-color: #f2f2f2;
         }
+
+        .ticket-table {
+            border: solid 1px #eeeeee;
+            border-radius: 10px;
+        }
+
+        .ticket-table th, .ticket-table td {
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .card {
+            background: #eeeeee;
+            border-radius: 10px;
+            width: 50%;
+            margin: 10px auto;
+        }
+
+        .QR {
+            padding: 0 20px 10px 20px;
+            width: 60%;
+            margin: 0 auto
+        }
+
+        .card-content {
+            display: flex;
+        }
+
+        .ticket-description {
+            width: 40%;
+            text-align: justify;
+        }
+
+        .download-btn {
+            margin: 0 auto;
+        }
+
+        .btn {
+            background: #0a6ebd;
+            padding: 5px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none
+        }
     </style>
 </head>
 </html>
@@ -77,7 +124,7 @@
             {% for ticket in ticket_orders %}
                 <div class="card" style="background: #eeeeee;border-radius: 10px;width: 50%;margin: 10px auto;">
                     <h4 align="center" style="padding: 10px"> Ticket #{{ ticket.code }}</h4>
-                    <div class="card-content">
+                    <div class="card-content" style="display: flex;">
                         <div class="QR" style="padding: 0 20px 10px 20px; width: 60%; margin: 0 auto">
                             <img src="{{ ticket.qr.url }}"
                                  alt="QR" style="height: 200px;">
@@ -88,7 +135,7 @@
                             <p>Hora: {{ order.event_day.start_time }}</p>
                             <p>Tipo: {{ ticket.ticket.type }}</p>
                             <div class="download-btn" style="margin: 0 auto;">
-                                <a href=""
+                                <a href="fridaayala.com/tickets-orders/download-ticket/{{ ticket.code }}/"
                                    class="btn"
                                    style="background: #0a6ebd; padding: 5px; color: white; border-radius: 5px; text-decoration: none">Descargar</a>
                             </div>
@@ -137,50 +184,5 @@
 
 </body>
 <style>
-    .ticket-table {
-        border: solid 1px #eeeeee;
-        border-radius: 10px;
-    }
 
-    .ticket-table th, .ticket-table td {
-        padding: 8px;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    .card {
-        background: #eeeeee;
-        border-radius: 10px;
-        width: 50%;
-        margin: 10px auto;
-    }
-
-    .QR {
-        padding: 0 20px 10px 20px;
-        width: 60%;
-        margin: 0 auto
-    }
-
-    .card-content {
-        display: flex;
-    }
-
-    .ticket-description {
-        width: 40%;
-        text-align: justify;
-    }
-
-    .download-btn {
-        margin: 0 auto;
-    }
-
-    .btn {
-        background: #0a6ebd;
-        padding: 5px;
-        color: white;
-        border-radius: 5px;
-        text-decoration: none
-    }
 </style>

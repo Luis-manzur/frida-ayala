@@ -32,6 +32,7 @@ django-cors-headers==3.14.0  # https://github.com/adamchainz/django-cors-headers
 drf-nested-routers
 # DRF-spectacular for api documentation
 drf-spectacular==0.26.1  # https://github.com/tfranzel/drf-spectacular
+xhtml2pdf
 
 
 
