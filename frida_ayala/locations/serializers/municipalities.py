@@ -11,3 +11,9 @@ class MunicipalityBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Municipality
         fields = ['name']
+
+
+class MunicipalityChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Municipality
+        fields = ['name', 'pk']

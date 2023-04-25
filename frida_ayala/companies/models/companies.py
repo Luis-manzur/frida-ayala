@@ -8,7 +8,7 @@ from django.db import models
 from frida_ayala.utils.models import FAModel
 
 
-class Companies(FAModel):
+class Company(FAModel):
     SECTORS = [
         ('T', 'Technology'),
         ('S', 'Services'),

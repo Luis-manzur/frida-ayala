@@ -24,7 +24,7 @@ class Contact(FAModel):
     )
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     position = models.CharField(max_length=20)
-    company = models.OneToOneField('companies.Companies', on_delete=models.CASCADE, related_name='contact')
+    company = models.OneToOneField('companies.Company', on_delete=models.CASCADE, related_name='contact')
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

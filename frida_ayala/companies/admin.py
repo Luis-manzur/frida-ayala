@@ -3,7 +3,7 @@
 from django.contrib import admin
 
 # models
-from frida_ayala.companies.models import Companies, Contact
+from frida_ayala.companies.models import Company, Contact
 from frida_ayala.utils.admin import admin_site
 
 
@@ -19,4 +19,4 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ('name', 'rif', 'sector', 'contact')
 
 
-admin_site.register(Companies, CompanyAdmin)
+admin_site.register(Company, CompanyAdmin)

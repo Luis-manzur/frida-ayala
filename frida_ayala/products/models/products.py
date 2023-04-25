@@ -13,7 +13,7 @@ class Product(FAModel):
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text='The amount MUST be given in USD')
     description = models.TextField(blank=True)
     stock = models.IntegerField()
-    supplier = models.ForeignKey('companies.Companies', on_delete=models.CASCADE)
+    supplier = models.ForeignKey('companies.Company', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

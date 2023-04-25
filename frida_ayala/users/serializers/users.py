@@ -6,12 +6,15 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import password_validation
 from django.core.validators import RegexValidator
+from django.shortcuts import get_object_or_404
 # Django REST Framework
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 # Simple-jwt
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from frida_ayala.locations.models import Municipality
+from frida_ayala.locations.models.states import State
 # Models
 from frida_ayala.users.models import User, Profile
 # Serializers
@@ -71,7 +74,7 @@ class UserSignUpSerializer(serializers.Serializer):
     last_name = serializers.CharField(min_length=2, max_length=30)
 
     # Profile
-    birth_date = serializers.DateField(required=True, validators=[validate_birth_date])
+    birth_date = serializers.DateField(required=True, validators=[validate_birth_date], input_formats=['%Y-%m-%d'])
     address = serializers.CharField(max_length=60, required=True)
     municipality = serializers.IntegerField(required=False)
     state = serializers.IntegerField(required=False)
@@ -89,6 +92,14 @@ class UserSignUpSerializer(serializers.Serializer):
             data['municipality'] = None
             data['state'] = None
         return data
+
+    def validate_municipality(self, data):
+        municipality = get_object_or_404(Municipality, pk=data)
+        return municipality
+
+    def validate_state(self, data):
+        state = get_object_or_404(State, pk=data)
+        return state
 
     def get_separated_data(self, data: dict):
         profile_data = dict(list(data.items())[7:])
