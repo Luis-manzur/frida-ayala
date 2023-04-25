@@ -1,4 +1,5 @@
 """Tickets serializer"""
+from datetime import datetime
 
 # Drf
 from rest_framework import serializers
@@ -20,7 +21,10 @@ class TicketSerializer(serializers.ModelSerializer):
         data = []
         for event_day in event_days:
             data.append({
-                'event_day': event_day.event_day.pk,
+                'event_day': {
+                    'id': event_day.event_day.pk,
+                    'date': datetime.strftime(event_day.event_day.date, '%d %b')
+                },
                 'stock': event_day.stock
             })
         return data
