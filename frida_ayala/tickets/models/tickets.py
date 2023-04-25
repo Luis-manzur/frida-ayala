@@ -27,7 +27,6 @@ class Ticket(FAModel):
 
 
 class TicketEventDay(FAModel):
-    ticket_type = models.ForeignKey(Ticket, on_delete=models.CASCADE)
-    day = models.ForeignKey(EventDay, on_delete=models.CASCADE
-
-                            )
+    ticket_type = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='event_days')
+    event_day = models.ForeignKey(EventDay, on_delete=models.CASCADE)
+    stock = models.IntegerField(validators=[validate_ticket_stock])
