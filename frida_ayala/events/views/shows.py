@@ -19,7 +19,7 @@ class EventDayViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins
 
     filter_backends = (OrderingFilter, SearchFilter, DjangoFilterBackend)
     ordering_fields = ('capacity', '-created', 'created')
-    ordering = ('-created',)
+    ordering = ('date',)
 
     def get_queryset(self):
         return EventDay.objects.filter(event__slug_name=self.kwargs['event_slug_name'])
