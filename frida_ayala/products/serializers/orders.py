@@ -29,6 +29,7 @@ class ProductOrderCreateSerializer(serializers.Serializer):
     def create(self, data):
         cart_items = self.context['cart_items']
         cart = data.pop('cart')
+        cart.delete()
         payment = data.pop('payment')
         order = ProductOrder(**data)
         order.save()
