@@ -28,5 +28,8 @@ class Company(FAModel):
     rif = models.CharField(max_length=13, validators=[rif_regex])
     logo = models.ImageField(upload_to='logos/', help_text='The image MUST NOT have background.')
 
+    class Meta:
+        verbose_name_plural = "Companies"
+
     def __str__(self):
         return self.name

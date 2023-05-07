@@ -382,7 +382,7 @@ JAZZMIN_SETTINGS = {
         'locations.Venue': 'fas fa-map-marker',
         'tickets.Ticket': 'fas fa-ticket-alt',
         'tickets.Order': 'fas fa-shopping-cart',
-        'companies.Companies': 'fas fa-building',
+        'companies.Company': 'fas fa-building',
         'products.Product': 'fas fa-shopping-bag',
         'products.ProductOrder': 'fas fa-shopping-cart'
     },
