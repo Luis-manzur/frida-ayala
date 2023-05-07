@@ -1,7 +1,7 @@
 """Cart Views"""
 
 # Django REST Framework
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -44,4 +44,4 @@ class CartViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
         serializer.is_valid(raise_exception=True)
         cart_item = serializer.save()
         data = CartItemSerializer(cart_item).data
-        return Response(data)
+        return Response(data, status=status.HTTP_201_CREATED)

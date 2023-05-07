@@ -1,34 +1,47 @@
 """Product orders"""
 
+from django.forms.models import model_to_dict
 # Django REST Framework
 from rest_framework import serializers
 
 from frida_ayala.payments.serializers.payments import PaymentCreateSerializer
 # Models
-from frida_ayala.products.models import OrderItem, ProductOrder
+from frida_ayala.products.models import ProductOrder, Cart, CartItem, OrderItem, Product
 # Serializers
-from frida_ayala.products.serializers.order_items import OrderItemModelSerializer, OrderItemCreateModelSerializer
+from frida_ayala.products.serializers.order_items import OrderItemModelSerializer
+
+
 # Tasks
-from frida_ayala.tickets.tasks import send_ticket_purchase_email_user
 
 
 class ProductOrderCreateSerializer(serializers.Serializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    products = serializers.ListField(child=OrderItemCreateModelSerializer())
+    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all())
     payment = PaymentCreateSerializer()
 
+    def validate_cart(self, data):
+        cart_items = CartItem.objects.filter(cart=data)
+        if len(cart_items) == 0:
+            raise serializers.ValidationError('Cart is empty')
+        self.context['cart_items'] = cart_items
+        return data
+
     def create(self, data):
-        products_data = data.pop('products')
+        cart_items = self.context['cart_items']
+        cart = data.pop('cart')
         payment = data.pop('payment')
         order = ProductOrder(**data)
         order.save()
-        for product_data in products_data:
-            product_data['order'] = order
-            product = OrderItem.objects.create(**product_data)
-            product.save()
+        for cart_item in cart_items:
+            cart_item = model_to_dict(cart_item)
+            cart_item.pop('id')
+            cart_item.pop('cart')
+            cart_item['product'] = Product.objects.get(pk=cart_item['product'])
+            cart_item['order'] = order
+            order_item = OrderItem(**cart_item)
+            order_item.save()
 
-        send_ticket_purchase_email_user.delay(order.code)
-        return order
+        return data
 
 
 class ProductOrderModelSerializer(serializers.ModelSerializer):

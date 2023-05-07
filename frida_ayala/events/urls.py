@@ -13,9 +13,9 @@ from .views import shows as shows_views
 from .views import sponsors as sponsors_views
 
 router = routers.SimpleRouter()
-router.register(r'events', events_views.EventViewSet, basename='events')
+router.register(r'', events_views.EventViewSet, basename='events')
 
-events_router = routers.NestedSimpleRouter(router, r'events', lookup='event')
+events_router = routers.NestedSimpleRouter(router, r'', lookup='event')
 events_router.register(r'shows', shows_views.EventDayViewSet, basename='shows')
 events_router.register(r'sponsors', sponsors_views.SponsorViewSet, basename='sponsors')
 events_router.register(r'tickets', tickets_views.TicketsViewSet, basename='tickets')

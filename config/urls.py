@@ -21,10 +21,10 @@ urlpatterns = [
                   ),
                   path('', include(('frida_ayala.users.urls', 'users'), namespace='users')),
                   path('', include(('frida_ayala.locations.urls', 'locations'), namespace='locations')),
-                  path('', include(('frida_ayala.events.urls', 'events'), namespace='events')),
+                  path('events/', include(('frida_ayala.events.urls', 'events'), namespace='events')),
                   path('api/token/', TokenObtainPairView.as_view(), name='token'),
                   path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh-token'),
-                  path('', include(('frida_ayala.tickets.urls', 'tickets'), namespace='tickets')),
+                  path('tickets/', include(('frida_ayala.tickets.urls', 'tickets'), namespace='tickets')),
                   path('', include(('frida_ayala.products.urls', 'products'), namespace='products')),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
