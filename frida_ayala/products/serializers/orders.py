@@ -1,17 +1,19 @@
 """Product orders"""
 
+import logging
+
 from django.forms.models import model_to_dict
 # Django REST Framework
 from rest_framework import serializers
 
-from frida_ayala.payments.serializers.payments import PaymentCreateSerializer
+from frida_ayala.payments.models import Payment
+from frida_ayala.payments.serializers.payments import PaymentCreateSerializer, make_payment
 # Models
 from frida_ayala.products.models import ProductOrder, Cart, CartItem, OrderItem, Product
 # Serializers
 from frida_ayala.products.serializers.order_items import OrderItemModelSerializer
 
-
-# Tasks
+logger = logging.getLogger('console')
 
 
 class ProductOrderCreateSerializer(serializers.Serializer):
@@ -25,6 +27,37 @@ class ProductOrderCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError('Cart is empty')
         self.context['cart_items'] = cart_items
         return data
+
+    def validate_payment(self, obj):
+        cart_valid = False
+        try:
+            self.validate_cart(self.initial_data['cart'])
+            cart_valid = True
+        except:
+            return obj
+        if cart_valid:
+            transaction_response = make_payment(obj)
+            print(transaction_response)
+            if not transaction_response:
+                logger.error('Transaction error. Communication error')
+                raise serializers.ValidationError("Transaction error, try again later.")
+            data = {
+                'card': obj['card'][-4:],
+                'reference': transaction_response['referencia'],
+                'amount': obj['amount'],
+                'status': 'A' if transaction_response['ok'] else 'F',
+                'code': transaction_response['codigo']
+            }
+
+            payment = Payment.objects.create(**data)
+            payment.save()
+            if transaction_response['ok']:
+                logger.info(f'Transaction success {transaction_response["referencia"]}')
+                return obj
+            else:
+                logger.info(
+                    f'Transaction error {transaction_response["referencia"]}: {transaction_response["respuesta_data"]}')
+                raise serializers.ValidationError(transaction_response['respuesta_data'])
 
     def create(self, data):
         cart_items = self.context['cart_items']
@@ -41,13 +74,12 @@ class ProductOrderCreateSerializer(serializers.Serializer):
             cart_item['order'] = order
             order_item = OrderItem(**cart_item)
             order_item.save()
-
-        return data
+        return order
 
 
 class ProductOrderModelSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    products = OrderItemModelSerializer(many=True, read_only=True, source='order_set')
+    products = OrderItemModelSerializer(many=True, read_only=True, source='orderitem_set')
 
     class Meta:
         model = ProductOrder

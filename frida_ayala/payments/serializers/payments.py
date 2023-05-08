@@ -2,12 +2,8 @@
 import requests
 # Django
 from django.conf import settings
-from django.http import JsonResponse
 # Django REST Framework
 from rest_framework import serializers
-
-# Models
-from frida_ayala.payments.models import Payment
 
 
 def make_payment(data):
@@ -19,15 +15,15 @@ def make_payment(data):
         'mes': data['month'],
         'ano': data['year'],
         'numero': data['card'],
-        'reference': data['reference']
+        'referencia': 95
     }
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', 'apikey': api_key}
     response = requests.post(url, data=payment_data, headers=headers)
 
     if response.status_code == 200:
         if response.status_code == 200:
             data = response.json()
-            return JsonResponse(data)
+            return data
         else:
             return False
 
@@ -73,24 +69,3 @@ class PaymentCreateSerializer(serializers.Serializer):
     year = serializers.ChoiceField(choices=YEAR_CHOICES)
     month = serializers.ChoiceField(choices=MONTH_CHOICES)
     reference = serializers.IntegerField()
-
-    def validate(self, obj):
-        if not settings.DEBUG:
-            transaction_response = make_payment(obj)
-            if not transaction_response:
-                raise serializers.ValidationError("Transaction error, try again later.")
-            data = {
-                'card': obj['card'][-4:],
-                'reference': transaction_response['referencia'],
-                'amount': obj['amount'],
-                'status': 'A' if transaction_response['ok'] else 'F',
-                'code': transaction_response['codigo']
-            }
-
-            payment = Payment.objects.create(**data)
-            payment.save()
-            if transaction_response['ok']:
-                return obj
-            else:
-                raise serializers.ValidationError(transaction_response['respuesta_data'])
-        return obj

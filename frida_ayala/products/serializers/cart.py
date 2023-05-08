@@ -39,14 +39,21 @@ class AddToCartSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ['product', 'quantity']
 
+    def validate_product(self, data):
+        user = self.context['user']
+        cart, response = Cart.objects.get_or_create(user=user)
+        self.context['cart'] = cart
+        if cart.cartitem_set.filter(product=data).exists():
+            raise serializers.ValidationError('The product is already in the cart.')
+        return data
+
     def validate(self, data):
         if data['product'].stock < data['quantity']:
             raise serializers.ValidationError('The quantity is greater than the product stock.')
         return data
 
     def create(self, data):
-        user = self.context['user']
-        cart, response = Cart.objects.get_or_create(user=user)
+        cart = self.context['cart']
         data['cart'] = cart
         cart_item = CartItem.objects.create(**data)
 
