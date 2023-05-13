@@ -37,13 +37,12 @@ class ProductOrderCreateSerializer(serializers.Serializer):
             return obj
         if cart_valid:
             transaction_response = make_payment(obj)
-            print(transaction_response)
             if not transaction_response:
                 logger.error('Transaction error. Communication error')
                 raise serializers.ValidationError("Transaction error, try again later.")
             data = {
                 'card': obj['card'][-4:],
-                'reference': transaction_response['referencia'],
+                'reference': transaction_response.get('referencia'),
                 'amount': obj['amount'],
                 'status': 'A' if transaction_response['ok'] else 'F',
                 'code': transaction_response['codigo']

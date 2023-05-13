@@ -21,11 +21,10 @@ def make_payment(data):
     response = requests.post(url, data=payment_data, headers=headers)
 
     if response.status_code == 200:
-        if response.status_code == 200:
-            data = response.json()
-            return data
-        else:
-            return False
+        data = response.json()
+        return data
+    else:
+        return False
 
 
 class PaymentCreateSerializer(serializers.Serializer):
