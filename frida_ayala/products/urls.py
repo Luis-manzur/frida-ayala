@@ -10,7 +10,7 @@ from frida_ayala.products.views import ProductsViewSet, ProductOrderViewSet, Car
 router = DefaultRouter()
 router.register(r'products', ProductsViewSet, basename='products')
 router.register(r'products/cart', CartViewSet, basename='cart')
-router.register(r'products/orders', ProductOrderViewSet, basename='product-orders')
+router.register(r'products-orders', ProductOrderViewSet, basename='product-orders')
 
 urlpatterns = [
     path('', include(router.urls))

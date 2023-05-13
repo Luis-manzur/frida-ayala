@@ -4,14 +4,13 @@
 import jwt
 # Django
 from django.conf import settings
-from django.contrib.auth import password_validation
+from django.contrib.auth import password_validation, authenticate
 from django.core.validators import RegexValidator
 from django.shortcuts import get_object_or_404
 # Django REST Framework
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueValidator
-# Simple-jwt
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from frida_ayala.locations.models import Municipality
 from frida_ayala.locations.models.states import State
@@ -23,6 +22,9 @@ from frida_ayala.users.serializers.profiles import ProfileModelSerializer
 from frida_ayala.users.tasks import send_confirmation_email
 # Utilities
 from frida_ayala.utils.validators import validate_birth_date
+
+
+# Simple-jwt
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -116,13 +118,28 @@ class UserSignUpSerializer(serializers.Serializer):
         return user
 
 
-class UserLoginSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user: User):
-        token = super().get_token(user)
-        token['user'] = UserModelSerializer(user).data
+class UserLoginSerializer(serializers.Serializer):
+    """User login serializer.
+    Handle the login request data.
+    """
 
-        return token
+    email = serializers.EmailField()
+    password = serializers.CharField(min_length=8, max_length=64)
+
+    def validate(self, data):
+        """Check credentials."""
+        user = authenticate(username=data["email"], password=data["password"])
+        if not user:
+            raise serializers.ValidationError("Invalid credentials")
+        if not user.is_verified:
+            raise serializers.ValidationError("Account is not active yet :(")
+        self.context["user"] = user
+        return data
+
+    def create(self, data):
+        """Generate or retrieve new token."""
+        token, created = Token.objects.get_or_create(user=self.context["user"])
+        return self.context["user"], token.key
 
 
 class AccountVerificationSerializer(serializers.Serializer):

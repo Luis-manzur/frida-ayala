@@ -2,11 +2,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path, re_path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-# simple-jwt
-from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 from frida_ayala.tickets.views.orders import QReadeTemplateView
 from frida_ayala.utils.admin import admin_site
+
+# simple-jwt
 
 urlpatterns = [
                   path('admin/', admin_site.urls),
@@ -21,8 +21,6 @@ urlpatterns = [
                   path('', include(('frida_ayala.users.urls', 'users'), namespace='users')),
                   path('', include(('frida_ayala.locations.urls', 'locations'), namespace='locations')),
                   path('events/', include(('frida_ayala.events.urls', 'events'), namespace='events')),
-                  path('api/token/', TokenObtainPairView.as_view(), name='token'),
-                  path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh-token'),
                   path('tickets/', include(('frida_ayala.tickets.urls', 'tickets'), namespace='tickets')),
                   path('', include(('frida_ayala.products.urls', 'products'), namespace='products')),
 

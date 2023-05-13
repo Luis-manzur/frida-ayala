@@ -16,7 +16,7 @@ from frida_ayala.users.permissions import IsAccountOwner
 from frida_ayala.users.serializers import (
     AccountVerificationSerializer,
     UserModelSerializer,
-    UserSignUpSerializer
+    UserSignUpSerializer, UserLoginSerializer
 )
 # Serializers
 from frida_ayala.users.serializers.profiles import ProfileModelSerializer
@@ -32,26 +32,28 @@ class UserViewSet(mixins.RetrieveModelMixin,
     queryset = User.objects.filter(is_active=True, is_client=True)
     lookup_field = 'username'
 
+    def get_serializer_class(self):
+        """Assign serializer based on action"""
+        if self.action == "signup":
+            return UserSignUpSerializer
+        elif self.action == "login":
+            return UserLoginSerializer
+        elif self.action == "verify":
+            return AccountVerificationSerializer
+        elif self.action == "profile":
+            return ProfileModelSerializer
+        else:
+            return UserModelSerializer
+
     def get_permissions(self):
         """Assign permissions based on action."""
-        if self.action in ['signup', 'verify']:
+        if self.action in ['signup', 'verify', 'login']:
             permissions = [AllowAny]
         elif self.action in ['retrieve', 'update', 'partial_update', 'profile']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
         return [p() for p in permissions]
-
-    def get_serializer_class(self):
-        """Assign serializer base on action."""
-        if self.action == 'signup':
-            return UserSignUpSerializer
-        elif self.action == 'verify':
-            return AccountVerificationSerializer
-        elif self.action in ['retrieve', 'update', 'partial_update']:
-            return UserModelSerializer
-        elif self.action == 'profile':
-            return ProfileModelSerializer
 
     @action(detail=False, methods=['post'])
     def signup(self, request):
@@ -86,3 +88,12 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer.save()
         data = UserModelSerializer(user).data
         return Response(data)
+
+    @action(detail=False, methods=["post"])
+    def login(self, request):
+        """User sign in."""
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user, token = serializer.save()
+        data = {"user": UserModelSerializer(user).data, "access_token": token}
+        return Response(data, status=status.HTTP_201_CREATED)
