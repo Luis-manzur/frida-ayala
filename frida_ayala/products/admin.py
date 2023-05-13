@@ -6,7 +6,7 @@ from django.contrib import admin
 # Forms
 from frida_ayala.products.forms import OrderItemInlineForm, OrderForm
 # models
-from frida_ayala.products.models import Product, OrderItem, ProductOrder
+from frida_ayala.products.models import Product, OrderItem, ProductOrder, Category
 # Utils
 from frida_ayala.utils.admin import admin_site
 
@@ -59,5 +59,10 @@ class OrderAdmin(admin.ModelAdmin):
             return super().get_form(request, obj, **kwargs)
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+admin_site.register(Category, CategoryAdmin)
 admin_site.register(ProductOrder, OrderAdmin)
 admin_site.register(Product, ProductAdmin)

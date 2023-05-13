@@ -1,13 +1,15 @@
 """Cart Views"""
-
+# Django
+from django.shortcuts import get_object_or_404
 # Django REST Framework
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 # Models
-from frida_ayala.products.models import Cart
+from frida_ayala.products.models import Cart, CartItem
 # Serializers
 from frida_ayala.products.serializers.cart import CartModelSerializer, AddToCartSerializer, CartItemSerializer
 # Permissions
@@ -45,3 +47,12 @@ class CartViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
         cart_item = serializer.save()
         data = CartItemSerializer(cart_item).data
         return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['delete'], url_path='remove-from-cart/(?P<id>\w+)')
+    def remove_from_cart(self, request, *args, **kwargs):
+        param_value = kwargs.get('id')
+        if param_value:
+            queryset = get_object_or_404(CartItem, pk=param_value)
+            queryset.delete()
+            return Response(CartItemSerializer(queryset).data)
+        raise NotFound

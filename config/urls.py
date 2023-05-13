@@ -12,7 +12,6 @@ urlpatterns = [
                   path('admin/', admin_site.urls),
                   path('qr-reader/', QReadeTemplateView.as_view(), name='qr-reader'),
                   re_path(r'^chaining/', include('smart_selects.urls')),
-                  # path('camera_admin/', camera_admin_site.urls),
                   path("schema/", SpectacularAPIView.as_view(), name="api-schema"),
                   path(
                       "docs/",
