@@ -32,7 +32,7 @@ class CustomUserAdmin(UserAdmin):
         # Remove the user roles field from the User model fieldsets
         fieldsets[2][1]['fields'] = (
             'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff',
-            'groups', 'is_superuser')
+            'groups',)
         return fieldsets
 
 

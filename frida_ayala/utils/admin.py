@@ -2,11 +2,17 @@
 
 # Django
 from django.contrib import admin
+from django.contrib.admin import site
 from django.shortcuts import render
 from django.urls import path
 
 
 class FAAdminSite(admin.AdminSite):
+
+    def __init__(self, *args, **kwargs):
+        super(FAAdminSite, self).__init__(*args, **kwargs)
+        self._registry.update(site._registry)  # PART 2
+
     def qr_reader(self, request):
         context = {}
         return render(request, 'tickets/qr_reader.html', context)
