@@ -22,6 +22,7 @@ class ProductOrder(FAModel):
     products = models.ManyToManyField('products.Product', through='OrderItem')
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
     code = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4)
+    shipping = models.ForeignKey('locations.Shipping', related_name='orders', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Order #{self.code} ({self.status})"

@@ -6,8 +6,9 @@ from django.forms.models import model_to_dict
 # Django REST Framework
 from rest_framework import serializers
 
+from frida_ayala.locations.serializers import ShippingModelSerializer
 from frida_ayala.payments.models import Payment
-from frida_ayala.payments.serializers.payments import PaymentCreateSerializer, make_payment
+from frida_ayala.payments.serializers.payments import PaymentCreateSerializer, make_payment, PaymentModelSerializer
 # Models
 from frida_ayala.products.models import ProductOrder, Cart, CartItem, OrderItem, Product
 # Serializers
@@ -20,6 +21,7 @@ class ProductOrderCreateSerializer(serializers.Serializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all())
     payment = PaymentCreateSerializer()
+    shipping = ShippingModelSerializer()
 
     def validate_cart(self, data):
         cart_items = CartItem.objects.filter(cart=data)
@@ -79,6 +81,7 @@ class ProductOrderCreateSerializer(serializers.Serializer):
 class ProductOrderModelSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     products = OrderItemModelSerializer(many=True, read_only=True, source='orderitem_set')
+    payments = PaymentModelSerializer(read_only=True)
 
     class Meta:
         model = ProductOrder

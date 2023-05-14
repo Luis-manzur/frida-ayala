@@ -5,6 +5,9 @@ from django.conf import settings
 # Django REST Framework
 from rest_framework import serializers
 
+# Model
+from frida_ayala.payments.models import Payment
+
 
 def make_payment(data):
     url = settings.INTERNATIONAL_CARDS_URL
@@ -68,3 +71,11 @@ class PaymentCreateSerializer(serializers.Serializer):
     year = serializers.ChoiceField(choices=YEAR_CHOICES)
     month = serializers.ChoiceField(choices=MONTH_CHOICES)
     reference = serializers.IntegerField()
+
+
+class PaymentModelSerializer(serializers.ModelSerializer):
+    """Payment Model serializer"""
+
+    class Meta:
+        model = Payment
+        exclude = ['modified', 'created']

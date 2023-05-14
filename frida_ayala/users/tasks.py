@@ -34,7 +34,7 @@ def send_confirmation_email(user_pk):
     subject = "Bienvenido @{}! Verifica tu cuenta antes de empezar a utilizar fridaayala.com.".format(
         user.username
     )
-    from_email = 'Dont Reply <do_not_reply@fridaayala.com>'
+    from_email = settings.DEFAULT_FROM_EMAIL
     content = render_to_string(
         "emails/users/account_verification.html",
         {"token": verification_token, "user": user},

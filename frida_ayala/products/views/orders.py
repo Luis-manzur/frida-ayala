@@ -25,7 +25,7 @@ class ProductOrderViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixi
             return ProductOrderModelSerializer
 
     def get_queryset(self):
-        return ProductOrder.objects.all()
+        return ProductOrder.objects.filter(user=self.request.user)
 
     def get_permissions(self):
         """Assign permissions based on action."""
