@@ -82,6 +82,7 @@ class ProductOrderModelSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     products = OrderItemModelSerializer(many=True, read_only=True, source='orderitem_set')
     payments = PaymentModelSerializer(read_only=True)
+    shipping = ShippingModelSerializer(read_only=True)
 
     class Meta:
         model = ProductOrder

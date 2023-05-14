@@ -14,6 +14,7 @@ class Product(FAModel):
     category = models.ForeignKey('products.Category', null=True, related_name='products', on_delete=models.SET_NULL)
     description = models.TextField(blank=True)
     stock = models.IntegerField()
+    sizes = models.ManyToManyField('products.Size', related_name='products')
     supplier = models.ForeignKey('companies.Company', related_name='products', on_delete=models.CASCADE)
 
     def __str__(self):
