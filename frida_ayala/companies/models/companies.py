@@ -23,7 +23,7 @@ class Company(FAModel):
 
     rif_regex = RegexValidator(
         regex=r'^[JG][-]\d{8}[-]\d$',
-        message='The RIF number must be entered in the format: J12345678901. Up to 10 digits allowed.'
+        message='The RIF number must be entered in the format: J-12345678-1. Up to 8 digits allowed.'
     )
     rif = models.CharField(max_length=13, validators=[rif_regex])
     logo = models.ImageField(upload_to='logos/', help_text='The image MUST NOT have background.')
