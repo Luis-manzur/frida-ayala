@@ -31,7 +31,7 @@ certificatesResolvers:
 http:
     routers:
         web-secure-router:
-            rule: "Host(`api.fridaayala.com`) || Host(`www.api.fridaayala.com`)"
+            rule: "Host(`fridaayala.com`) || Host(`www.fridaayala.com`)"
             entryPoints:
                 - web-secure
             middlewares:
@@ -42,7 +42,7 @@ http:
                 certResolver: letsencrypt
 
         flower-secure-router:
-            rule: "Host(`api.fridaayala.com`)"
+            rule: "Host(`fridaayala.com`)"
             entryPoints:
                 - flower
             service: flower

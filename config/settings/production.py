@@ -14,7 +14,7 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["api.fridaayala.com"])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["fridaayala.com"])
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ SENTRY_LOG_LEVEL = env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO)
 
 sentry_logging = LoggingIntegration(
     level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
-    event_level=logging.ERROR,  # Send errors as events
+    event_level=logging.__all__,  # Send errors as events
 )
 integrations = [
     sentry_logging,
@@ -164,7 +164,7 @@ sentry_sdk.init(
 # -------------------------------------------------------------------------------
 # Tools that generate code samples can use SERVERS to point to the correct domain
 SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa F405
-    {"url": "https://api.fridaayala.com", "description": "Production server"}
+    {"url": "https://fridaayala.com", "description": "Production server"}
 ]
 # Your stuff...
 # ------------------------------------------------------------------------------
