@@ -13,7 +13,7 @@ from frida_ayala.products.models import Product, Category
 from frida_ayala.products.serializers.brands import BrandSerializer
 from frida_ayala.products.serializers.categories import CategorySerializer
 # Serializers
-from frida_ayala.products.serializers.products import ProductSerializer
+from frida_ayala.products.serializers.products import ProductSerializer, ProductDetailSerializer
 
 
 class ProductsViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.ListModelMixin):
@@ -26,7 +26,13 @@ class ProductsViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins
     )
     filter_fields = ("supplier", "category")
 
-    serializer_class = ProductSerializer
+    def get_serializer_class(self):
+        """Based on Action"""
+        if self.action in ['retrieve']:
+            return ProductDetailSerializer
+        else:
+            return ProductSerializer
+
     queryset = Product.objects.all()
 
     @action(detail=False, methods=['get'], url_path='filters')

@@ -1,4 +1,4 @@
-"""Shipping model."""
+"""Shippings model."""
 
 from django.core.validators import RegexValidator
 # Django
@@ -20,7 +20,7 @@ class Shipping(FAModel):
         show_all=False,
         auto_choose=True,
         on_delete=models.CASCADE)
-    address = models.CharField(max_length=60)
+    office = models.CharField(max_length=60)
 
     postal_code_regex = RegexValidator(
         regex=r'^\d{4}$',
@@ -31,4 +31,11 @@ class Shipping(FAModel):
 
     def __str__(self):
         """Return name str representation."""
-        return str(self.state.name + ' ' + self.municipality.name + ' ' + self.postal_code)
+        return str(self.state.name + ' ' + self.municipality.name + ' ' + self.postal_code + ' ' + self.office)
+
+
+class Delivery(FAModel):
+    address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.address

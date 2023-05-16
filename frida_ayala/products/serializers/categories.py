@@ -1,4 +1,4 @@
-"""Brand serializer"""
+"""Categories serializer"""
 
 # Drf
 from rest_framework import serializers
@@ -8,7 +8,7 @@ from frida_ayala.products.models import Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    """Ticket model serializer"""
+    """Categories model serializer"""
     value = serializers.IntegerField(source='id')
     label = serializers.CharField(source='name')
     checked = serializers.BooleanField(default=False)

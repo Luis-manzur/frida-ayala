@@ -11,6 +11,7 @@ class OrderItem(FAModel):
     order = models.ForeignKey('products.ProductOrder', on_delete=models.CASCADE)
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    size = models.ForeignKey('products.Size', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.order} - {self.product} x{self.quantity}"
