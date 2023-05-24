@@ -18,6 +18,7 @@ class Ticket(FAModel):
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[validate_price_amount])
     entries = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     stock = models.IntegerField(validators=[validate_ticket_stock])
+    description = models.TextField()
 
     class Meta:
         unique_together = ('type', 'event')

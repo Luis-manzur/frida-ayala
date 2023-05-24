@@ -25,6 +25,7 @@ class Event(FAModel):
     about = models.CharField('event description', max_length=255)
     venue = models.ForeignKey(Venue, related_name='venue', null=True, on_delete=models.SET_NULL)
     type = models.CharField(choices=TYPES, default='B', max_length=150)
+    trailer = models.URLField(null=True)
 
     class Meta:
         indexes = [
