@@ -11,3 +11,4 @@ class Sponsor(FAModel):
     company = models.ForeignKey('companies.Company', on_delete=models.CASCADE)
     arrangement = models.TextField()
     event = models.ForeignKey('events.Event', on_delete=models.CASCADE)
+    main_sponsor = models.BooleanField(default=True)
