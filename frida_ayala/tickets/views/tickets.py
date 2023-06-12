@@ -14,8 +14,7 @@ class TicketsViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.
     # Filter The Tickets By event
     filter_backends = [DjangoFilterBackend]
     search_fields = ['event']
-
     serializer_class = TicketSerializer
 
     def get_queryset(self):
-        return Ticket.objects.filter(event__slug_name=self.kwargs['event_slug_name'])
+        return Ticket.objects.filter(event__slug_name=self.kwargs['event_slug_name']).order_by('-price')
