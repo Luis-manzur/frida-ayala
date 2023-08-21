@@ -12,7 +12,7 @@ from frida_ayala.utils.operations import generate_reference_number
 
 
 def make_payment(data):
-    url = settings.INTERNATIONAL_CARDS_URL
+    url = settings.INTERNATIONAL_CARDS_URL + '/sandbox/init/' + settings.INTERNATIONAL_CARDS_URL
     api_key = settings.INTERNATIONAL_API_KEY
     payment_data = {
         'Monto': str(data['amount']),
@@ -29,7 +29,7 @@ def make_payment(data):
 
     if response.status_code == 200:
         data = response.json()
-        return data
+        return data, payment_data
     else:
         return False
 

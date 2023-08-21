@@ -15,7 +15,7 @@ class Payment(FAModel):
 
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=1, choices=STATUS, default='P')
-    reference = models.IntegerField(null=True)
+    reference = models.CharField(null=True, max_length=6)
     transaction_code = models.CharField(max_length=10, null=True)
     dni = models.CharField(max_length=10)
     order_id = models.UUIDField()

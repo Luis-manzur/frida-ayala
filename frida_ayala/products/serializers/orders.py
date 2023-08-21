@@ -78,17 +78,17 @@ class ProductOrderCreateSerializer(serializers.Serializer):
             except:
                 return obj
             if cart_valid:
-                transaction_response = make_payment(obj)
+                transaction_response, request_data = make_payment(obj)
                 transaction_data = transaction_response['data']
                 if not transaction_response:
                     logger.error('Transaction error. Communication error')
                     raise serializers.ValidationError("Transaction error, try again later.")
                 data = {
                     'dni': obj['dni'],
-                    'reference': generate_reference_number(),
+                    'transaction_code': generate_reference_number(),
                     'amount': obj['amount'],
                     'order_id': transaction_data['ordenID'],
-                    'request_data': request.data,
+                    'request_data': request_data,
                     'browser': browser,
                     'browser_version': browser_version,
                     'operating_system': os_name,
