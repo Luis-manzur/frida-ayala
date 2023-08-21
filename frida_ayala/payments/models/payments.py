@@ -8,11 +8,22 @@ from frida_ayala.utils.models import FAModel
 
 class Payment(FAModel):
     STATUS = [
-        ('A', 'Aprobado'),
-        ('F', 'Fallido')
+        ('A', 'Approved'),
+        ('R', 'Rejected'),
+        ('P', 'Pending')
     ]
-    card = models.CharField(max_length=4)
+
     amount = models.DecimalField(max_digits=8, decimal_places=2)
-    code = models.CharField(max_length=36)
-    status = models.CharField(max_length=1, choices=STATUS, default='A')
-    reference = models.IntegerField()
+    status = models.CharField(max_length=1, choices=STATUS, default='P')
+    reference = models.IntegerField(null=True)
+    transaction_code = models.CharField(max_length=10, null=True)
+    dni = models.CharField(max_length=10)
+    order_id = models.UUIDField()
+    response_data = models.JSONField(null=True)
+    operating_system = models.CharField(max_length=16)
+    os_version = models.CharField(max_length=16)
+    origin_url = models.URLField()
+    client_ip = models.GenericIPAddressField()
+    browser = models.CharField(max_length=16)
+    browser_version = models.CharField(max_length=16)
+    request_data = models.JSONField()

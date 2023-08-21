@@ -41,4 +41,6 @@ class ProductOrderViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixi
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
         data = ProductOrderModelSerializer(order).data
+        data['transaction_url'] = serializer.context['transaction_url']
+        print(data)
         return Response(data, status=status.HTTP_201_CREATED)

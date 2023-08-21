@@ -2,6 +2,7 @@
 
 import logging
 
+import user_agents
 from django.forms.models import model_to_dict
 # Django REST Framework
 from rest_framework import serializers
@@ -14,6 +15,8 @@ from frida_ayala.payments.serializers.payments import PaymentCreateSerializer, m
 from frida_ayala.products.models import ProductOrder, Cart, CartItem, OrderItem, Product, Size
 # Serializers
 from frida_ayala.products.serializers.order_items import OrderItemModelSerializer
+# Operations
+from frida_ayala.utils.operations import generate_reference_number
 
 logger = logging.getLogger('console')
 
@@ -55,6 +58,17 @@ class ProductOrderCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError('shipping data must be completed')
 
     def validate_payment(self, obj):
+        request = self.context['request']
+        ip_address = request.META.get('REMOTE_ADDR')
+
+        user_agent_string = request.META.get('HTTP_USER_AGENT')
+        user_agent = user_agents.parse(user_agent_string)
+
+        os_name = user_agent.os.family
+        os_version = user_agent.os.version_string
+        browser = user_agent.browser.family
+        browser_version = user_agent.browser.version_string
+
         payment_method = self.initial_data['payment_method']
         if payment_method == 'CARD':
             cart_valid = False
@@ -65,21 +79,28 @@ class ProductOrderCreateSerializer(serializers.Serializer):
                 return obj
             if cart_valid:
                 transaction_response = make_payment(obj)
+                transaction_data = transaction_response['data']
                 if not transaction_response:
                     logger.error('Transaction error. Communication error')
                     raise serializers.ValidationError("Transaction error, try again later.")
                 data = {
-                    'card': obj['card'][-4:],
-                    'reference': transaction_response.get('referencia'),
+                    'dni': obj['dni'],
+                    'reference': generate_reference_number(),
                     'amount': obj['amount'],
-                    'status': 'A' if transaction_response['ok'] else 'F',
-                    'code': transaction_response['codigo']
+                    'order_id': transaction_data['ordenID'],
+                    'request_data': request.data,
+                    'browser': browser,
+                    'browser_version': browser_version,
+                    'operating_system': os_name,
+                    'os_version': os_version,
+                    'client_ip': ip_address,
                 }
 
                 payment = Payment.objects.create(**data)
                 payment.save()
-                if transaction_response['ok']:
-                    logger.info(f'Transaction success {transaction_response["referencia"]}')
+                if transaction_response['status'] == 200:
+                    logger.info(f'Transaction success {transaction_data["ordenID"]}')
+                    self.context['transaction_url'] = transaction_data['url']
                     return obj
                 else:
                     logger.info(
