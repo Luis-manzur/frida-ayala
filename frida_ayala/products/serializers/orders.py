@@ -1,7 +1,7 @@
 """Product orders"""
 
 import logging
-
+from datetime import datetime, timedelta
 import user_agents
 from django.forms.models import model_to_dict
 # Django REST Framework
@@ -17,8 +17,15 @@ from frida_ayala.products.models import ProductOrder, Cart, CartItem, OrderItem,
 from frida_ayala.products.serializers.order_items import OrderItemModelSerializer
 # Operations
 from frida_ayala.utils.operations import generate_reference_number
+# Tasks
+from frida_ayala.payments.tasks import update_pending_payment
 
 logger = logging.getLogger('console')
+
+
+def create_task_view(payment):
+    eta = datetime.now() + timedelta(minutes=1)
+    update_pending_payment.apply_async(args=(payment,), eta=eta)
 
 
 class ProductOrderCreateSerializer(serializers.Serializer):
@@ -98,6 +105,7 @@ class ProductOrderCreateSerializer(serializers.Serializer):
 
                 payment = Payment.objects.create(**data)
                 payment.save()
+                create_task_view(payment.id)
                 if transaction_response['status'] == 200:
                     logger.info(f'Transaction success {transaction_data["ordenID"]}')
                     self.context['transaction_url'] = transaction_data['url']

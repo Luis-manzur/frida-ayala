@@ -12,7 +12,7 @@ from frida_ayala.utils.operations import generate_reference_number
 
 
 def make_payment(data):
-    url = settings.INTERNATIONAL_CARDS_URL + '/sandbox/init/' + settings.INTERNATIONAL_CARDS_URL
+    url = settings.INTERNATIONAL_CARDS_URL + '/sandbox/init/' + settings.INTERNATIONAL_CARDS_URL_TOKEN
     api_key = settings.INTERNATIONAL_API_KEY
     payment_data = {
         'Monto': str(data['amount']),
@@ -22,7 +22,8 @@ def make_payment(data):
         'Urldone': settings.INTERNATIONAL_PAYMENT_DONDE_URL,
         'Urlcancel': settings.INTERNATIONAL_PAYMENT_CANCEL_URL,
         'Externalid': settings.EXTERNAL_ID,
-        'Descripcion': 'Pago en tienda'
+        'Descripcion': 'Pago en tienda',
+        'Expireminute': 1,
     }
     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': f'Bearer {api_key}'}
     response = requests.post(url, data=payment_data, headers=headers)
